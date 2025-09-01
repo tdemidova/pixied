@@ -3719,7 +3719,7 @@ textarea.w-input, textarea.w-select {
 
 @media screen and (max-width: 767px) {
   [data-w-id="57b2a7a0-cb22-6842-b1bf-546c860d3ae4"] {
-    opacity: 1;
+    opacity: 1 !important;
   }
   .nav {
     position: absolute;
@@ -4048,7 +4048,7 @@ textarea.w-input, textarea.w-select {
 
   .creators__features-wrapper {
     flex-direction: column;
-    margin-top: 48vw;
+    margin-top: 20vw;
   }
 
   .hero__heading-wrapper-main {
