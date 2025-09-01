@@ -3768,7 +3768,7 @@ textarea.w-input, textarea.w-select {
   .hero__text-wrapper {
     flex-wrap: wrap;
     align-content: flex-start;
-    margin-right: 8.33%;
+    /*margin-right: 8.33%;*/
   }
 
   .hero__text {
