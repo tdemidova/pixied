@@ -2949,6 +2949,7 @@ textarea.w-input, textarea.w-select {
   font-size: 3vw;
   font-weight: 400;
   line-height: 1.2em;
+
 }
 
 .nav_drop__menu {
@@ -3717,6 +3718,9 @@ textarea.w-input, textarea.w-select {
 }
 
 @media screen and (max-width: 767px) {
+  [data-w-id="57b2a7a0-cb22-6842-b1bf-546c860d3ae4"] {
+    opacity: 1;
+  }
   .nav {
     position: absolute;
   }
@@ -3744,7 +3748,7 @@ textarea.w-input, textarea.w-select {
 
   .hero__wrapper {
     justify-content: flex-end;
-    padding-bottom: 12vw;
+    padding-bottom: 30vw;
   }
 
   .hero__heading {
@@ -4019,6 +4023,7 @@ textarea.w-input, textarea.w-select {
   .footer__heading_text {
     max-width: 80%;
     font-size: 8vw;
+    margin-bottom: 2em;
   }
 
   .inner_about_wrapper {
@@ -4052,7 +4057,7 @@ textarea.w-input, textarea.w-select {
   }
 
   .hero__heading-2 {
-    margin-right: 2vw;
+    /*margin-right: 2vw;*/
     font-size: 8.4vw;
   }
 
