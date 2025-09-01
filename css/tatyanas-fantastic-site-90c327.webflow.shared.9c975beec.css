@@ -3961,13 +3961,15 @@ textarea.w-input, textarea.w-select {
 
   .footer__wrapper {
     justify-content: flex-start;
-    padding-top: 9vw;
+    padding-top: 15vw;
   }
 
   .footer__heading {
-    text-align: center;
+    /*text-align: center;*/
     font-size: 8vw;
   }
+
+
 
   .footer__cta {
     width: 83vw;
