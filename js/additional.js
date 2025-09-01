@@ -1,16 +1,18 @@
         const modal = document.getElementById('modal');
-        const openModalBtn = document.querySelector('.open-modal-btn');
+        const openModalBtns = document.querySelectorAll('.open-modal-btn');
         const closeModalBtn = document.querySelector('.close-btn');
         const signupForm = document.getElementById('signup-form');
         const successMessage = document.getElementById('success-message');
         const errorMessage = document.getElementById('error-message');
         
-        openModalBtn.addEventListener('click', function() {
-            modal.style.display = 'block';
-            document.body.style.overflow = 'hidden'; // Запрещаем прокрутку страницы
-            // Сбрасываем сообщения при открытии
-            successMessage.style.display = 'none';
-            errorMessage.style.display = 'none';
+        openModalBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                modal.style.display = 'block';
+                document.body.style.overflow = 'hidden';
+                successMessage.style.display = 'none';
+                errorMessage.style.display = 'none';
+                signupForm.reset();
+            });
         });
         
         closeModalBtn.addEventListener('click', function() {

@@ -2431,7 +2431,6 @@ textarea.w-input, textarea.w-select {
 }
 
 .requests__wrapper {
-  border: 1px solid var(--black);
   color: var(--gray--light);
   flex-direction: column;
   justify-content: flex-start;
@@ -4210,7 +4209,7 @@ textarea.w-input, textarea.w-select {
 .modal {
           display: none;
           position: fixed;
-          z-index: 1000;
+          z-index: 1000000;
           left: 0;
           top: 0;
           width: 100%;
