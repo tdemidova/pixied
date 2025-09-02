@@ -2807,11 +2807,7 @@ textarea.w-input, textarea.w-select {
   position: absolute;
   inset: 0%;
   overflow: hidden;
-  background:
-    radial-gradient(ellipse at top     left, #122B7E  15% , transparent 60%), 
-    radial-gradient(ellipse at bottom  left, #172550 15% , transparent 60%),
-    radial-gradient(ellipse at top    right, #1A1A37 15% , transparent 60%),
-    radial-gradient(ellipse at bottom right, #17174D   15% , transparent 60%)
+  background: linear-gradient(to bottom, #0f205c, #182347)
 }
 
 .hero__videos-wrapper video {
