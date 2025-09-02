@@ -224,13 +224,20 @@ body {
     height: max-content;
   color: #333;
   background: linear-gradient(
-    300deg,
-    hsl(226deg 72% 25%) 0%,
-    hsl(230deg 55% 17%) 34%,
-    hsl(233deg 50% 12%) 57%,
-    hsl(239deg 43% 11%) 72%,
-    hsl(238deg 31% 11%) 85%,
-    hsl(240deg 13% 9%) 100%
+    125deg,
+    hsl(227deg 82% 13%) 0%,
+    hsl(227deg 82% 13%) 2%,
+    hsl(227deg 82% 13%) 4%,
+    hsl(226deg 82% 13%) 7%,
+    hsl(227deg 81% 12%) 11%,
+    hsl(227deg 80% 12%) 16%,
+    hsl(227deg 80% 12%) 23%,
+    hsl(228deg 78% 10%) 32%,
+    hsl(229deg 76% 8%) 43%,
+    hsl(236deg 67% 5%) 57%,
+    hsl(237deg 70% 5%) 74%,
+    hsl(238deg 75% 4%) 89%,
+    hsl(240deg 82% 4%) 100%
   ) no-repeat;
   background-size: auto 100%;
   margin: 0;
@@ -2177,7 +2184,22 @@ textarea.w-input, textarea.w-select {
 
 .create {
   z-index: 3;
-  /*background-color: var(--black);*/
+  background: linear-gradient(
+    125deg,
+    hsl(227deg 82% 13%) 0%,
+    hsl(227deg 82% 13%) 2%,
+    hsl(227deg 82% 13%) 4%,
+    hsl(226deg 82% 13%) 7%,
+    hsl(227deg 81% 12%) 11%,
+    hsl(227deg 80% 12%) 16%,
+    hsl(227deg 80% 12%) 23%,
+    hsl(228deg 78% 10%) 32%,
+    hsl(229deg 76% 8%) 43%,
+    hsl(236deg 67% 5%) 57%,
+    hsl(237deg 70% 5%) 74%,
+    hsl(238deg 75% 4%) 89%,
+    hsl(240deg 82% 4%) 100%
+  ) no-repeat;
   padding-top: 12vw;
   padding-bottom: 7vw;
   display: block;
@@ -2328,7 +2350,22 @@ textarea.w-input, textarea.w-select {
 
 .requests {
   z-index: 1;
-  /*background-color: var(--black);*/
+  background: linear-gradient(
+    125deg,
+    hsl(227deg 82% 13%) 0%,
+    hsl(227deg 82% 13%) 2%,
+    hsl(227deg 82% 13%) 4%,
+    hsl(226deg 82% 13%) 7%,
+    hsl(227deg 81% 12%) 11%,
+    hsl(227deg 80% 12%) 16%,
+    hsl(227deg 80% 12%) 23%,
+    hsl(228deg 78% 10%) 32%,
+    hsl(229deg 76% 8%) 43%,
+    hsl(236deg 67% 5%) 57%,
+    hsl(237deg 70% 5%) 74%,
+    hsl(238deg 75% 4%) 89%,
+    hsl(240deg 82% 4%) 100%
+  ) no-repeat;
   justify-content: center;
   align-items: center;
   padding-top: 12vw;
@@ -2382,7 +2419,22 @@ textarea.w-input, textarea.w-select {
 
 .scan {
   z-index: 0;
-  /*background-color: var(--black);*/
+  background: linear-gradient(
+    125deg,
+    hsl(227deg 82% 13%) 0%,
+    hsl(227deg 82% 13%) 2%,
+    hsl(227deg 82% 13%) 4%,
+    hsl(226deg 82% 13%) 7%,
+    hsl(227deg 81% 12%) 11%,
+    hsl(227deg 80% 12%) 16%,
+    hsl(227deg 80% 12%) 23%,
+    hsl(228deg 78% 10%) 32%,
+    hsl(229deg 76% 8%) 43%,
+    hsl(236deg 67% 5%) 57%,
+    hsl(237deg 70% 5%) 74%,
+    hsl(238deg 75% 4%) 89%,
+    hsl(240deg 82% 4%) 100%
+  ) no-repeat;
   padding-bottom: 10vw;
   display: none;
   position: relative;
@@ -2698,6 +2750,11 @@ textarea.w-input, textarea.w-select {
   overflow: hidden;
 }
 
+.hero__videos-wrapper video {
+  position: absolute;
+  right: 0;
+}
+
 .footer__loop-wrapper {
   width: 100vw;
   height: 100vh;
@@ -2709,13 +2766,20 @@ textarea.w-input, textarea.w-select {
 .preloader {
   z-index: 999999;
   background: linear-gradient(
-    300deg,
-    hsl(226deg 72% 25%) 0%,
-    hsl(230deg 55% 17%) 34%,
-    hsl(233deg 50% 12%) 57%,
-    hsl(239deg 43% 11%) 72%,
-    hsl(238deg 31% 11%) 85%,
-    hsl(240deg 13% 9%) 100%
+    125deg,
+    hsl(227deg 82% 13%) 0%,
+    hsl(227deg 82% 13%) 2%,
+    hsl(227deg 82% 13%) 4%,
+    hsl(226deg 82% 13%) 7%,
+    hsl(227deg 81% 12%) 11%,
+    hsl(227deg 80% 12%) 16%,
+    hsl(227deg 80% 12%) 23%,
+    hsl(228deg 78% 10%) 32%,
+    hsl(229deg 76% 8%) 43%,
+    hsl(236deg 67% 5%) 57%,
+    hsl(237deg 70% 5%) 74%,
+    hsl(238deg 75% 4%) 89%,
+    hsl(240deg 82% 4%) 100%
   ) no-repeat;
   justify-content: center;
   align-items: center;
@@ -3007,7 +3071,22 @@ textarea.w-input, textarea.w-select {
 
 .about__block {
   z-index: 1;
-  /*background-color: var(--black);*/
+  background: linear-gradient(
+    125deg,
+    hsl(227deg 82% 13%) 0%,
+    hsl(227deg 82% 13%) 2%,
+    hsl(227deg 82% 13%) 4%,
+    hsl(226deg 82% 13%) 7%,
+    hsl(227deg 81% 12%) 11%,
+    hsl(227deg 80% 12%) 16%,
+    hsl(227deg 80% 12%) 23%,
+    hsl(228deg 78% 10%) 32%,
+    hsl(229deg 76% 8%) 43%,
+    hsl(236deg 67% 5%) 57%,
+    hsl(237deg 70% 5%) 74%,
+    hsl(238deg 75% 4%) 89%,
+    hsl(240deg 82% 4%) 100%
+  ) no-repeat;
   padding-top: 10vw;
   position: relative;
   overflow: hidden;
@@ -3016,7 +3095,22 @@ textarea.w-input, textarea.w-select {
 .footer__inner {
   z-index: 1;
   color: var(--gray--100);
-  /*background-color: var(--black);*/
+  background: linear-gradient(
+    125deg,
+    hsl(227deg 82% 13%) 0%,
+    hsl(227deg 82% 13%) 2%,
+    hsl(227deg 82% 13%) 4%,
+    hsl(226deg 82% 13%) 7%,
+    hsl(227deg 81% 12%) 11%,
+    hsl(227deg 80% 12%) 16%,
+    hsl(227deg 80% 12%) 23%,
+    hsl(228deg 78% 10%) 32%,
+    hsl(229deg 76% 8%) 43%,
+    hsl(236deg 67% 5%) 57%,
+    hsl(237deg 70% 5%) 74%,
+    hsl(238deg 75% 4%) 89%,
+    hsl(240deg 82% 4%) 100%
+  ) no-repeat;
   height: 10vh;
   position: relative;
   overflow: hidden;
@@ -3075,12 +3169,31 @@ textarea.w-input, textarea.w-select {
 
 .creators {
   z-index: 3;
-  /*background-color: var(--black);*/
+  background: linear-gradient(
+    125deg,
+    hsl(227deg 82% 13%) 0%,
+    hsl(227deg 82% 13%) 2%,
+    hsl(227deg 82% 13%) 4%,
+    hsl(226deg 82% 13%) 7%,
+    hsl(227deg 81% 12%) 11%,
+    hsl(227deg 80% 12%) 16%,
+    hsl(227deg 80% 12%) 23%,
+    hsl(228deg 78% 10%) 32%,
+    hsl(229deg 76% 8%) 43%,
+    hsl(236deg 67% 5%) 57%,
+    hsl(237deg 70% 5%) 74%,
+    hsl(238deg 75% 4%) 89%,
+    hsl(240deg 82% 4%) 100%
+  ) no-repeat;
   padding-top: 12vw;
   padding-bottom: 7vw;
   position: relative;
 }
 
+.creators__heading {
+  font-size: 5vw;
+  line-height: 1.1em;
+}
 .creators__text-wrapper-copy {
   z-index: 1;
   text-align: center;
@@ -3281,7 +3394,22 @@ textarea.w-input, textarea.w-select {
 
 .how {
   z-index: 3;
-  /*background-color: var(--black);*/
+  background: linear-gradient(
+    125deg,
+    hsl(227deg 82% 13%) 0%,
+    hsl(227deg 82% 13%) 2%,
+    hsl(227deg 82% 13%) 4%,
+    hsl(226deg 82% 13%) 7%,
+    hsl(227deg 81% 12%) 11%,
+    hsl(227deg 80% 12%) 16%,
+    hsl(227deg 80% 12%) 23%,
+    hsl(228deg 78% 10%) 32%,
+    hsl(229deg 76% 8%) 43%,
+    hsl(236deg 67% 5%) 57%,
+    hsl(237deg 70% 5%) 74%,
+    hsl(238deg 75% 4%) 89%,
+    hsl(240deg 82% 4%) 100%
+  ) no-repeat;
   padding-top: 12vw;
   padding-bottom: 7vw;
   position: relative;
@@ -3965,7 +4093,22 @@ textarea.w-input, textarea.w-select {
   }
 
   .about__block {
-    /*background-color: var(--black);*/
+    background: linear-gradient(
+    125deg,
+    hsl(227deg 82% 13%) 0%,
+    hsl(227deg 82% 13%) 2%,
+    hsl(227deg 82% 13%) 4%,
+    hsl(226deg 82% 13%) 7%,
+    hsl(227deg 81% 12%) 11%,
+    hsl(227deg 80% 12%) 16%,
+    hsl(227deg 80% 12%) 23%,
+    hsl(228deg 78% 10%) 32%,
+    hsl(229deg 76% 8%) 43%,
+    hsl(236deg 67% 5%) 57%,
+    hsl(237deg 70% 5%) 74%,
+    hsl(238deg 75% 4%) 89%,
+    hsl(240deg 82% 4%) 100%
+  ) no-repeat;
   }
 
   .creators__features-wrapper {
