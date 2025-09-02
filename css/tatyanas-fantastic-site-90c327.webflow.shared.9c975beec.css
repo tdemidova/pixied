@@ -2565,9 +2565,9 @@ textarea.w-input, textarea.w-select {
   overflow: hidden;
 }
 
-.body {
+/*.body {
   background-color: var(--blue);
-}
+}*/
 
 .footer__loop {
   z-index: 1;
