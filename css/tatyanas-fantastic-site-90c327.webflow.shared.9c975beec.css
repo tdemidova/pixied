@@ -2813,6 +2813,8 @@ textarea.w-input, textarea.w-select {
 .hero__videos-wrapper video {
   position: absolute;
   right: 0;
+  height: 100%;
+  width: auto;
 }
 
 .footer__loop-wrapper {
