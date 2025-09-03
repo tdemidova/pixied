@@ -2147,7 +2147,7 @@ textarea.w-input, textarea.w-select {
 .hero__text-wrapper {
   justify-content: flex-start;
   align-items: flex-start;
-  margin-top: 1.8vw;
+/*  margin-top: 1.8vw;*/
   display: flex;
 }
 
@@ -2269,7 +2269,7 @@ textarea.w-input, textarea.w-select {
   color: var(--gray--100);
   flex: 0 auto;
   max-width: none;
-  margin-top: 10px;
+  margin-top: 2em;
   margin-right: .4vw;
 }
 
@@ -2323,7 +2323,8 @@ textarea.w-input, textarea.w-select {
   width: 18%;
   display: block;
   position: absolute;
-  top: 8.5vw;
+  /*top: 8.5vw;*/
+  top : 0;
   left: 61%;
 }
 
@@ -2334,7 +2335,7 @@ textarea.w-input, textarea.w-select {
 .create__coin2-wrapper {
   width: 18%;
   position: absolute;
-  top: 39.9vw;
+  top: 31.9vw;
   left: 13%;
 }
 
@@ -2345,7 +2346,7 @@ textarea.w-input, textarea.w-select {
 .create__coin1-wrapper {
   width: 20%;
   position: absolute;
-  top: 36vw;
+  top: 30vw;
   left: 75%;
 }
 
@@ -2373,6 +2374,7 @@ textarea.w-input, textarea.w-select {
   width: 25%;
   height: 24vw;
   position: absolute;
+  top: 25%;
   left: 15%;
 }
 
@@ -2807,12 +2809,18 @@ textarea.w-input, textarea.w-select {
   position: absolute;
   inset: 0%;
   overflow: hidden;
-  background: linear-gradient(to bottom, #0f205c, #182347)
+  background: linear-gradient(to bottom, #122B7E, #051440);
+  background-size: auto 100%;
+/*  background:
+    radial-gradient(ellipse at top     left, #122B7E  15% , transparent 60%), 
+    radial-gradient(ellipse at bottom  left, #061340 15% , transparent 60%),
+    radial-gradient(ellipse at top    right, #1A1A37 15% , transparent 60%),
+    radial-gradient(ellipse at bottom right, #09090A   15% , transparent 60%)*/
 }
 
 .hero__videos-wrapper video {
   position: absolute;
-  right: 0;
+  /*right: 0;*/
   height: 100%;
   width: auto;
 }
@@ -3133,46 +3141,30 @@ textarea.w-input, textarea.w-select {
 
 .about__block {
   z-index: 1;
-  background: linear-gradient(
-    125deg,
-    hsl(227deg 82% 13%) 0%,
-    hsl(227deg 82% 13%) 2%,
-    hsl(227deg 82% 13%) 4%,
-    hsl(226deg 82% 13%) 7%,
-    hsl(227deg 81% 12%) 11%,
-    hsl(227deg 80% 12%) 16%,
-    hsl(227deg 80% 12%) 23%,
-    hsl(228deg 78% 10%) 32%,
-    hsl(229deg 76% 8%) 43%,
-    hsl(236deg 67% 5%) 57%,
-    hsl(237deg 70% 5%) 74%,
-    hsl(238deg 75% 4%) 89%,
-    hsl(240deg 82% 4%) 100%
-  ) no-repeat;
   padding-top: 10vw;
   position: relative;
   overflow: hidden;
 }
 
+.background__odd {
+  background:
+    radial-gradient(ellipse at top     left, #080E24  15% , transparent 60%), 
+    radial-gradient(ellipse at bottom  left, #061340 15% , transparent 60%),
+    radial-gradient(ellipse at top    right, #020214 15% , transparent 60%),
+    radial-gradient(ellipse at bottom right, #09090A   15% , transparent 60%);
+}
+
+.background__even {
+  background:
+    radial-gradient(ellipse at top     left, #061340  15% , transparent 60%), 
+    radial-gradient(ellipse at bottom  left, #080E24 15% , transparent 60%),
+    radial-gradient(ellipse at top    right, #09090A 15% , transparent 60%),
+    radial-gradient(ellipse at bottom right, #020214   15% , transparent 60%);
+}
+
 .footer__inner {
   z-index: 1;
   color: var(--gray--100);
-  background: linear-gradient(
-    125deg,
-    hsl(227deg 82% 13%) 0%,
-    hsl(227deg 82% 13%) 2%,
-    hsl(227deg 82% 13%) 4%,
-    hsl(226deg 82% 13%) 7%,
-    hsl(227deg 81% 12%) 11%,
-    hsl(227deg 80% 12%) 16%,
-    hsl(227deg 80% 12%) 23%,
-    hsl(228deg 78% 10%) 32%,
-    hsl(229deg 76% 8%) 43%,
-    hsl(236deg 67% 5%) 57%,
-    hsl(237deg 70% 5%) 74%,
-    hsl(238deg 75% 4%) 89%,
-    hsl(240deg 82% 4%) 100%
-  ) no-repeat;
   height: 10vh;
   position: relative;
   overflow: hidden;
@@ -3224,9 +3216,9 @@ textarea.w-input, textarea.w-select {
   color: #E5E8EB;
   margin-right: .4vw;
   font-family: Poppins, sans-serif;
-  font-size: 1.5vw;
+  font-size: 1.7vw;
   font-weight: 600;
-  line-height: 1.2em;
+  line-height: 2em;
 }
 
 .creators {
@@ -3242,8 +3234,10 @@ textarea.w-input, textarea.w-select {
 }
 
 .creators__heading {
-  font-size: 5vw;
+  font-size: 6.5vw;
   line-height: 1.1em;
+  margin-bottom: 4vw;
+  text-align: center;
 }
 .creators__text-wrapper-copy {
   z-index: 1;
@@ -3264,9 +3258,9 @@ textarea.w-input, textarea.w-select {
   max-width: none;
   margin-right: .4vw;
   font-family: Poppins, sans-serif;
-  font-size: 1.3vw;
+/*  font-size: 2vw;*/
   font-weight: 600;
-  line-height: 1.5em;
+/*  line-height: 1.5em;*/
 }
 
 .creators__text.payment__text--blue {
@@ -3897,7 +3891,7 @@ textarea.w-input, textarea.w-select {
     flex-flow: wrap;
     justify-content: center;
     width: 87%;
-    margin-top: 16vw;
+/*    margin-top: 20vw;*/
   }
 
   .plain__text {
@@ -4149,22 +4143,7 @@ textarea.w-input, textarea.w-select {
   }
 
   .about__block {
-    background: linear-gradient(
-    125deg,
-    hsl(227deg 82% 13%) 0%,
-    hsl(227deg 82% 13%) 2%,
-    hsl(227deg 82% 13%) 4%,
-    hsl(226deg 82% 13%) 7%,
-    hsl(227deg 81% 12%) 11%,
-    hsl(227deg 80% 12%) 16%,
-    hsl(227deg 80% 12%) 23%,
-    hsl(228deg 78% 10%) 32%,
-    hsl(229deg 76% 8%) 43%,
-    hsl(236deg 67% 5%) 57%,
-    hsl(237deg 70% 5%) 74%,
-    hsl(238deg 75% 4%) 89%,
-    hsl(240deg 82% 4%) 100%
-  ) no-repeat;
+    
   }
 
   .creators__features-wrapper {
