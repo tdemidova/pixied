@@ -2809,13 +2809,12 @@ textarea.w-input, textarea.w-select {
   position: absolute;
   inset: 0%;
   overflow: hidden;
-  background: linear-gradient(to bottom, #122B7E, #051440);
-  background-size: auto 100%;
-/*  background:
+  background:
     radial-gradient(ellipse at top     left, #122B7E  15% , transparent 60%), 
-    radial-gradient(ellipse at bottom  left, #061340 15% , transparent 60%),
-    radial-gradient(ellipse at top    right, #1A1A37 15% , transparent 60%),
-    radial-gradient(ellipse at bottom right, #09090A   15% , transparent 60%)*/
+    radial-gradient(ellipse at bottom  left, #061340 40% , transparent 60%),
+    radial-gradient(ellipse at top    right, #1A1A37 49% , transparent 60%),
+    radial-gradient(ellipse at bottom right, #09090A   49% , transparent 60%);
+  background-size: auto 100%;
 }
 
 .hero__videos-wrapper video {
