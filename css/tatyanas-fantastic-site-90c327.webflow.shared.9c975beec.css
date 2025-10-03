@@ -4165,8 +4165,9 @@ textarea.w-input, textarea.w-select {
     font-size: 4vw;
   }
 
-  .about__block {
-    
+  .inner_about_wrapper img {
+    width: 100px !important;
+    height: 100px !important;
   }
 
   .creators__features-wrapper {
