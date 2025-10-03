@@ -221,9 +221,9 @@ html, body {
 }
 
 body {
-    height: max-content;
+  height: max-content;
   color: #333;
-  background: linear-gradient(
+  background: #333; /*linear-gradient(
     125deg,
     hsl(227deg 82% 13%) 0%,
     hsl(227deg 82% 13%) 2%,
@@ -238,7 +238,7 @@ body {
     hsl(237deg 70% 5%) 74%,
     hsl(238deg 75% 4%) 89%,
     hsl(240deg 82% 4%) 100%
-  ) no-repeat;
+  ) no-repeat;*/
   background-size: auto 100%;
   margin: 0;
   font-family: Arial, sans-serif;
@@ -2184,7 +2184,7 @@ textarea.w-input, textarea.w-select {
 
 .create {
   z-index: 3;
-  background: linear-gradient(
+/*  background: linear-gradient(
     125deg,
     hsl(227deg 82% 13%) 0%,
     hsl(227deg 82% 13%) 2%,
@@ -2199,7 +2199,7 @@ textarea.w-input, textarea.w-select {
     hsl(237deg 70% 5%) 74%,
     hsl(238deg 75% 4%) 89%,
     hsl(240deg 82% 4%) 100%
-  ) no-repeat;
+  ) no-repeat;*/
   padding-top: 12vw;
   padding-bottom: 7vw;
   display: block;
@@ -2209,11 +2209,11 @@ textarea.w-input, textarea.w-select {
 .create__coins-wrapper {
   position: absolute;
   inset: 0%;
-  background:
+/*  background:
     radial-gradient(ellipse at top     left, #172550  15% , transparent 60%), 
     radial-gradient(ellipse at bottom  left, #080E24 15% , transparent 60%),
     radial-gradient(ellipse at top    right, #17174D 15% , transparent 60%),
-    radial-gradient(ellipse at bottom right, #020214   15% , transparent 60%)
+    radial-gradient(ellipse at bottom right, #020214   15% , transparent 60%)*/
 }
 
 .create__intro-wrapper {
@@ -2356,12 +2356,12 @@ textarea.w-input, textarea.w-select {
 
 .requests {
   z-index: 1;
-  background:
+/*  background:
     radial-gradient(ellipse at top     left, #080E24  15% , transparent 60%), 
     radial-gradient(ellipse at bottom  left, #061340 15% , transparent 60%),
     radial-gradient(ellipse at top    right, #020214 15% , transparent 60%),
     radial-gradient(ellipse at bottom right, #09090A   15% , transparent 60%);
-  background-position: ;
+  background-position: ;*/
   justify-content: center;
   align-items: center;
   padding-top: 12vw;
@@ -2416,7 +2416,7 @@ textarea.w-input, textarea.w-select {
 
 .scan {
   z-index: 0;
-  background: linear-gradient(
+/*  background: linear-gradient(
     125deg,
     hsl(227deg 82% 13%) 0%,
     hsl(227deg 82% 13%) 2%,
@@ -2431,7 +2431,7 @@ textarea.w-input, textarea.w-select {
     hsl(237deg 70% 5%) 74%,
     hsl(238deg 75% 4%) 89%,
     hsl(240deg 82% 4%) 100%
-  ) no-repeat;
+  ) no-repeat;*/
   padding-bottom: 10vw;
   display: none;
   position: relative;
@@ -2588,11 +2588,11 @@ textarea.w-input, textarea.w-select {
   padding-left: 8.33%;
   display: flex;
   position: relative;
-  background:
+/*  background:
     radial-gradient(ellipse at top     left, #080E24  15% , transparent 60%), 
     radial-gradient(ellipse at bottom  left, #061340 15% , transparent 60%),
     radial-gradient(ellipse at top    right, #020214 15% , transparent 60%),
-    radial-gradient(ellipse at bottom right, #09090A   15% , transparent 60%);
+    radial-gradient(ellipse at bottom right, #09090A   15% , transparent 60%);*/
 }
 
 .footer__heading-wrapper {
@@ -2809,11 +2809,11 @@ textarea.w-input, textarea.w-select {
   position: absolute;
   inset: 0%;
   overflow: hidden;
-  background:
+/*  background:
     radial-gradient(ellipse at top     left, #122B7E  15% , transparent 60%), 
     radial-gradient(ellipse at bottom  left, #061340 40% , transparent 60%),
     radial-gradient(ellipse at top    right, #1A1A37 49% , transparent 60%),
-    radial-gradient(ellipse at bottom right, #09090A   49% , transparent 60%);
+    radial-gradient(ellipse at bottom right, #09090A   49% , transparent 60%);*/
   background-size: auto 100%;
 }
 
@@ -3222,11 +3222,11 @@ textarea.w-input, textarea.w-select {
 
 .creators {
   z-index: 3;
-  background:
+/*  background:
     radial-gradient(ellipse at top     left, #061340  15% , transparent 60%), 
     radial-gradient(ellipse at bottom  left, #080E24 15% , transparent 60%),
     radial-gradient(ellipse at top    right, #09090A 15% , transparent 60%),
-    radial-gradient(ellipse at bottom right, #020214   15% , transparent 60%);
+    radial-gradient(ellipse at bottom right, #020214   15% , transparent 60%);*/
   padding-top: 12vw;
   padding-bottom: 7vw;
   position: relative;
@@ -3333,6 +3333,25 @@ textarea.w-input, textarea.w-select {
 .how__feature {
   width: auto;
   margin-left: 4%;
+  padding: 2em;
+  height: 100%;
+  border-radius: 3em;
+   background: linear-gradient(
+    125deg,
+    hsl(227deg 82% 13%) 0%,
+    hsl(227deg 82% 13%) 2%,
+    hsl(227deg 82% 13%) 4%,
+    hsl(226deg 82% 13%) 7%,
+    hsl(227deg 81% 12%) 11%,
+    hsl(227deg 80% 12%) 16%,
+    hsl(227deg 80% 12%) 23%,
+    hsl(228deg 78% 10%) 32%,
+    hsl(229deg 76% 8%) 43%,
+    hsl(236deg 67% 5%) 57%,
+    hsl(237deg 70% 5%) 74%,
+    hsl(238deg 75% 4%) 89%,
+    hsl(240deg 82% 4%) 100%
+  ) no-repeat;
 }
 
 .how_heatures-wrapper {
@@ -3438,7 +3457,7 @@ textarea.w-input, textarea.w-select {
 
 .how {
   z-index: 3;
-  background: linear-gradient(
+/*  background: linear-gradient(
     125deg,
     hsl(227deg 82% 13%) 0%,
     hsl(227deg 82% 13%) 2%,
@@ -3453,7 +3472,7 @@ textarea.w-input, textarea.w-select {
     hsl(237deg 70% 5%) 74%,
     hsl(238deg 75% 4%) 89%,
     hsl(240deg 82% 4%) 100%
-  ) no-repeat;
+  ) no-repeat;*/
   padding-top: 12vw;
   padding-bottom: 7vw;
   position: relative;
@@ -3543,7 +3562,12 @@ textarea.w-input, textarea.w-select {
   color: var(--gray--100);
   max-width: 1160px;
   padding-left: 0;
-  padding-right: 0;
+  padding-right: 0;f
+}
+
+.faq {
+  font-size: 1.5em;
+  line-height: 1.5em;
 }
 
 .switch {
@@ -4297,7 +4321,7 @@ textarea.w-input, textarea.w-select {
 }
 
 .section {
-  background-color:  var(--black);
+/*  background-color:  var(--black);*/
   color: var(--gray--100);
 }
 
@@ -4431,3 +4455,108 @@ textarea.w-input, textarea.w-select {
               width: 95%;
               padding: 20px;
           }
+
+  
+
+
+
+/*head*/
+/* === Webflow: Combined Custom Styles from Both Pages === */
+
+@media (min-width: 992px) {
+  html.w-mod-js:not(.w-mod-ix) [data-w-id="a4e8fccb-43b5-c40a-596b-9891eb86c68b"] {
+    -webkit-transform: translate3d(0, 0, 0) scale3d(0.5, 0.5, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);
+    -moz-transform: translate3d(0, 0, 0) scale3d(0.5, 0.5, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);
+    -ms-transform: translate3d(0, 0, 0) scale3d(0.5, 0.5, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);
+    transform: translate3d(0, 0, 0) scale3d(0.5, 0.5, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);
+  }
+  html.w-mod-js:not(.w-mod-ix) [data-w-id="0370b0ed-32b2-3cc8-d46a-fb58fa8f2924"] {
+    display: flex;
+  }
+  html.w-mod-js:not(.w-mod-ix) [data-w-id="57b2a7a0-cb22-6842-b1bf-546c860d3b0c"],
+  html.w-mod-js:not(.w-mod-ix) [data-w-id="b52a811f-ff71-cfb3-10be-39a50734ca62"],
+  html.w-mod-js:not(.w-mod-ix) [data-w-id="aa8b3a33-4555-be45-00b5-5a09922d9bef"],
+  html.w-mod-js:not(.w-mod-ix) [data-w-id="57b2a7a0-cb22-6842-b1bf-546c860d3ae4"] {
+    opacity: 0;
+  }
+}
+
+@media (max-width: 991px) and (min-width: 768px) {
+  html.w-mod-js:not(.w-mod-ix) [data-w-id="a4e8fccb-43b5-c40a-596b-9891eb86c68b"] {
+    -webkit-transform: translate3d(0, 0, 0) scale3d(0.5, 0.5, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);
+    -moz-transform: translate3d(0, 0, 0) scale3d(0.5, 0.5, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);
+    -ms-transform: translate3d(0, 0, 0) scale3d(0.5, 0.5, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);
+    transform: translate3d(0, 0, 0) scale3d(0.5, 0.5, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);
+  }
+  html.w-mod-js:not(.w-mod-ix) [data-w-id="0370b0ed-32b2-3cc8-d46a-fb58fa8f2924"] {
+    display: flex;
+  }
+  html.w-mod-js:not(.w-mod-ix) [data-w-id="57b2a7a0-cb22-6842-b1bf-546c860d3b0c"],
+  html.w-mod-js:not(.w-mod-ix) [data-w-id="b52a811f-ff71-cfb3-10be-39a50734ca62"],
+  html.w-mod-js:not(.w-mod-ix) [data-w-id="aa8b3a33-4555-be45-00b5-5a09922d9bef"],
+  html.w-mod-js:not(.w-mod-ix) [data-w-id="57b2a7a0-cb22-6842-b1bf-546c860d3ae4"] {
+    opacity: 0;
+  }
+}
+
+@media (max-width: 767px) and (min-width: 480px) {
+  html.w-mod-js:not(.w-mod-ix) [data-w-id="a4e8fccb-43b5-c40a-596b-9891eb86c68b"] {
+    -webkit-transform: translate3d(0, 0, 0) scale3d(0.5, 0.5, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);
+    -moz-transform: translate3d(0, 0, 0) scale3d(0.5, 0.5, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);
+    -ms-transform: translate3d(0, 0, 0) scale3d(0.5, 0.5, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);
+    transform: translate3d(0, 0, 0) scale3d(0.5, 0.5, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);
+  }
+  html.w-mod-js:not(.w-mod-ix) [data-w-id="0370b0ed-32b2-3cc8-d46a-fb58fa8f2924"] {
+    display: flex;
+  }
+  /* Вторая страница НЕ скрывает opacity-элементы здесь — НЕ добавляем */
+}
+
+@media (max-width: 479px) {
+  html.w-mod-js:not(.w-mod-ix) [data-w-id="a4e8fccb-43b5-c40a-596b-9891eb86c68b"] {
+    -webkit-transform: translate3d(0, 0, 0) scale3d(0.5, 0.5, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);
+    -moz-transform: translate3d(0, 0, 0) scale3d(0.5, 0.5, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);
+    -ms-transform: translate3d(0, 0, 0) scale3d(0.5, 0.5, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);
+    transform: translate3d(0, 0, 0) scale3d(0.5, 0.5, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);
+  }
+  html.w-mod-js:not(.w-mod-ix) [data-w-id="0370b0ed-32b2-3cc8-d46a-fb58fa8f2924"] {
+    display: flex;
+  }
+  /* opacity-правила отсутствуют у обеих на этом брейкпоинте */
+}
+
+/* Font smoothing */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-font-smoothing: antialiased;
+  -o-font-smoothing: antialiased;
+}
+
+/* Blend mode for cursor (desktop only) */
+@media screen and (min-device-width: 767px) {
+  .scan__cursor-wrapper {
+    mix-blend-mode: difference;
+  }
+}
+
+
+.faq {
+  font-size: 2em;
+}
+
+.photo-container {
+  display: flex;
+  gap: 20px; /* расстояние между фото */
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.photo-circle {
+  width: 150px;       /* размер круга */
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;  /* чтобы фото заполняло круг без искажений */
+  border: 3px solid #ccc; /* необязательная рамка */
+}
+

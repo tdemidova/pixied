@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Pixied</title>
+    <link>http://localhost:1313/</link>
+    <description>Recent content on Pixied</description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <lastBuildDate>Wed, 01 Oct 2025 16:51:18 +0300</lastBuildDate>
+    <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>About</title>
+      <link>http://localhost:1313/about/</link>
+      <pubDate>Wed, 01 Oct 2025 16:51:18 +0300</pubDate>
+      <guid>http://localhost:1313/about/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>FAQ</title>
+      <link>http://localhost:1313/faq/</link>
+      <pubDate>Wed, 01 Oct 2025 16:51:18 +0300</pubDate>
+      <guid>http://localhost:1313/faq/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Image to 3D</title>
+      <link>http://localhost:1313/image-to-3d/</link>
+      <pubDate>Wed, 01 Oct 2025 16:51:18 +0300</pubDate>
+      <guid>http://localhost:1313/image-to-3d/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Pricing</title>
+      <link>http://localhost:1313/pricing/</link>
+      <pubDate>Wed, 01 Oct 2025 16:51:18 +0300</pubDate>
+      <guid>http://localhost:1313/pricing/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Text to 3D</title>
+      <link>http://localhost:1313/text-to-3d/</link>
+      <pubDate>Wed, 01 Oct 2025 16:51:18 +0300</pubDate>
+      <guid>http://localhost:1313/text-to-3d/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Text to Texture</title>
+      <link>http://localhost:1313/text-to-texture/</link>
+      <pubDate>Wed, 01 Oct 2025 16:51:18 +0300</pubDate>
+      <guid>http://localhost:1313/text-to-texture/</guid>
+      <description></description>
+    </item>
+  </channel>
+</rss>
