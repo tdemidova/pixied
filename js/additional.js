@@ -26,33 +26,38 @@
                 document.body.style.overflow = 'auto';
             }
         });
-        signupForm.addEventListener('submit', function(event) {
-            event.preventDefault();
+        signupForm.addEventListener('submit', async function(event) {
+            event.preventDefault(); // Отменяем стандартную отправку
+
             const formData = new FormData(signupForm);
-            fetch('send_email.php', {
+            const object = Object.fromEntries(formData);
+            const json = JSON.stringify(object);
+
+            try {
+              const response = await fetch('https://formspree.io/f/xrbyypnq', {
                 method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    successMessage.style.display = 'block';
-                    errorMessage.style.display = 'none';
-                    signupForm.reset();
-                    setTimeout(function() {
-                        modal.style.display = 'none';
-                        document.body.style.overflow = 'auto';
-                    }, 3000);
-                } else {
-                    errorMessage.style.display = 'block';
-                    successMessage.style.display = 'none';
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Accept': 'application/json'
+                },
+                body: json
+              });
+
+              if (response.ok) {
+                successMessage.style.display = 'block';
+                errorMessage.style.display = 'none';
+                signupForm.reset(); // Очистить форму
+              } else {
+                const errorData = await response.json();
                 errorMessage.style.display = 'block';
                 successMessage.style.display = 'none';
-            });
+                
+              }
+            } catch (error) {
+                console.error('Ошибка сети:', error);
+                errorMessage.style.display = 'block';
+                successMessage.style.display = 'none';
+            }
         });
         
         function validateEmail(email) {
