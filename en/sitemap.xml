@@ -15,6 +15,18 @@
                 href="http://localhost:1313/"
                 />
   </url><url>
+    <loc>http://localhost:1313/dashboard/</loc>
+    <xhtml:link
+                rel="alternate"
+                hreflang="fr"
+                href="http://localhost:1313/fr/dashboard/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="http://localhost:1313/dashboard/"
+                />
+  </url><url>
     <loc>http://localhost:1313/about/</loc>
     <lastmod>2025-10-01T16:51:18+03:00</lastmod>
     <xhtml:link

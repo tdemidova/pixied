@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard — Pixied</title>
+  <style>
+    body {
+      background-color: #0f0f0f;
+      color: #f0f0f0;
+      font-family: 'Inter', system-ui, sans-serif;
+      margin: 0;
+      padding: 2rem;
+    }
+    .container { max-width: 800px; margin: 0 auto; }
+    .hidden { display: none; }
+    button, input {
+      padding: 0.6rem 1.2rem;
+      margin: 0.5rem 0;
+      border: 1px solid #333;
+      border-radius: 8px;
+      background: #1a1a1a;
+      color: white;
+      font-size: 1rem;
+    }
+    button:hover { background: #252525; }
+    input { width: 100%; max-width: 400px; }
+    h1 { font-weight: 700; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    
+    <div id="auth-screen">
+      <h1>✨ Welcome to Pixied</h1>
+      <p>Create 3D like a pro — just sign in to get started.</p>
+      <input type="email" id="email-input" placeholder="your@email.com" />
+      <button id="signin-btn">Send Magic Link</button>
+      <p id="auth-status" style="color: #4caf50; min-height: 1.5em;"></p>
+    </div>
+
+    
+    <div id="dashboard" class="hidden">
+      <h1>🚀 Your Dashboard</h1>
+      <p>Signed in as: <strong id="user-email"></strong></p>
+      <button id="signout-btn">Sign Out</button>
+
+    <h2>Upload an image to generate 3D</h2>
+    <input type="file" id="image-upload" accept="image/*" />
+    <p id="upload-status"></p>
+    <div id="image-preview" style="margin-top: 1rem; display: none;">
+      <img id="preview-img" src="" alt="Preview" style="max-width: 100%; max-height: 300px; border-radius: 8px;"/>
+    </div>
+
+    <h2>Your uploaded images</h2>
+    <div id="images-list" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 1rem; margin-top: 1rem;">
+      <p id="no-images">No images yet.</p>
+    </div>
+  </div>
+
+  <script type="module">
+    const SUPABASE_URL = 'https://aozghciziapiwobafkem.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFvemdoY2l6aWFwaXdvYmFma2VtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA0NDIyMjIsImV4cCI6MjA3NjAxODIyMn0.Nmav4zv0BKwaW34ZRUzCad3kpg52TnVbpdYa3fezX8E';
+
+
+  import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+  const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  await supabase.auth.getSession();
+
+
+  
+  const authScreen = document.getElementById('auth-screen');
+  const dashboard = document.getElementById('dashboard');
+  const emailInput = document.getElementById('email-input');
+  const signinBtn = document.getElementById('signin-btn');
+  const signoutBtn = document.getElementById('signout-btn');
+  const userEmail = document.getElementById('user-email');
+  const authStatus = document.getElementById('auth-status');
+  const imageUpload = document.getElementById('image-upload');
+  const uploadStatus = document.getElementById('upload-status');
+  const imagePreview = document.getElementById('image-preview');
+  const previewImg = document.getElementById('preview-img');
+
+  
+  async function checkSession() {
+    const { data:  { session } } = await supabase.auth.getSession();
+    if (session) {
+      authScreen.classList.add('hidden');
+      dashboard.classList.remove('hidden');
+      userEmail.textContent = session.user.email;
+      loadUserImages(); 
+    } else {
+      authScreen.classList.remove('hidden');
+      dashboard.classList.add('hidden');
+    }
+  }
+
+  
+  async function loadUserImages() {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) return;
+
+    const userId = session.user.id;
+    const { data, error } = await supabase
+      .storage
+      .from('user-uploads')
+      .list(userId + '/', {
+        limit: 50,
+        offset: 0,
+      });
+
+    const imagesList = document.getElementById('images-list');
+    const noImages = document.getElementById('no-images');
+
+    if (error || !data || data.length === 0) {
+      noImages.style.display = 'block';
+      imagesList.innerHTML = '';
+      return;
+    }
+
+    const imageFiles = data.filter(file =>
+      file.name.match(/\.(jpeg|jpg|png|webp)$/i)
+    );
+
+    if (imageFiles.length === 0) {
+      noImages.style.display = 'block';
+      imagesList.innerHTML = '';
+      return;
+    }
+
+    noImages.style.display = 'none';
+    imagesList.innerHTML = '';
+
+    for (const file of imageFiles) {
+      const filePath = `${userId}/${file.name}`;
+      
+      const { data: signedData } = await supabase
+        .storage
+        .from('user-uploads')
+        .createSignedUrl(filePath, 3600);
+
+      
+      const item = document.createElement('div');
+      item.style.position = 'relative';
+      item.style.marginBottom = '1.2rem';
+
+      
+      const img = document.createElement('img');
+      img.src = signedData?.signedUrl || '';
+      img.alt = file.name;
+      img.style.width = '100%';
+      img.style.height = '120px';
+      img.style.objectFit = 'cover';
+      img.style.borderRadius = '8px';
+      img.style.backgroundColor = '#1a1a1a';
+      img.style.cursor = 'pointer';
+
+      
+      const deleteBtn = document.createElement('button');
+      deleteBtn.textContent = '🗑️ Delete';
+      deleteBtn.title = 'Delete this image';
+      deleteBtn.style.position = 'absolute';
+      deleteBtn.style.bottom = '4px';
+      deleteBtn.style.right = '4px';
+      deleteBtn.style.padding = '4px 8px';
+      deleteBtn.style.border = 'none';
+      deleteBtn.style.borderRadius = '4px';
+      deleteBtn.style.backgroundColor = '#ff4d4d';
+      deleteBtn.style.color = 'white';
+      deleteBtn.style.fontSize = '0.75rem';
+      deleteBtn.style.cursor = 'pointer';
+      deleteBtn.style.opacity = '0';
+      deleteBtn.style.transition = 'opacity 0.2s';
+
+      
+      item.addEventListener('mouseenter', () => {
+        deleteBtn.style.opacity = '1';
+      });
+      item.addEventListener('mouseleave', () => {
+        deleteBtn.style.opacity = '0';
+      });
+
+      
+      deleteBtn.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        if (!confirm('Are you sure you want to delete this image?')) return;
+
+        const { error: delError } = await supabase
+          .storage
+          .from('user-uploads')
+          .remove([filePath]);
+
+        if (delError) {
+          alert('Failed to delete: ' + delError.message);
+        } else {
+          
+          loadUserImages();
+        }
+      });
+
+      
+      item.addEventListener('click', () => {
+        localStorage.setItem('selectedImage', filePath);
+        alert('Selected: ' + file.name);
+      });
+
+      item.appendChild(img);
+      item.appendChild(deleteBtn);
+      imagesList.appendChild(item);
+    }
+  }
+  
+  signinBtn?.addEventListener('click', async () => {
+    const email = emailInput.value.trim();
+    if (!email || !email.includes('@')) {
+      authStatus.textContent = 'Please enter a valid email.';
+      authStatus.style.color = '#ff6b6b';
+      return;
+    }
+
+    authStatus.textContent = 'Sending magic link...';
+    authStatus.style.color = '#4caf50';
+
+    const redirectUrl = window.location.origin + '/dashboard/';
+    const { error } = await supabase.auth.signInWithOtp({
+      email,
+      options: { emailRedirectTo: redirectUrl }
+    });
+
+    if (error) {
+      authStatus.textContent = 'Error: ' + error.message;
+      authStatus.style.color = '#ff6b6b';
+    } else {
+      authStatus.textContent = '✅ Check your email for the magic link!';
+    }
+  });
+
+  
+  signoutBtn?.addEventListener('click', async () => {
+    await supabase.auth.signOut();
+    checkSession();
+  });
+
+  
+  imageUpload?.addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const objectUrl = URL.createObjectURL(file);
+    previewImg.src = objectUrl;
+    imagePreview.style.display = 'block';
+
+    uploadStatus.textContent = 'Uploading...';
+    uploadStatus.style.color = '#4caf50';
+
+    const { data: { session }, error: authError } = await supabase.auth.getSession();
+    if (authError || !session) {
+      uploadStatus.textContent = 'Authentication required.';
+      uploadStatus.style.color = '#ff6b6b';
+      imagePreview.style.display = 'none';
+      return;
+    }
+
+    const userId = session.user.id;
+    const fileName = `${Date.now()}-${file.name.replace(/\s+/g, '-')}`;
+    const filePath = `${userId}/${fileName}`;
+
+    const { error: uploadError } = await supabase
+      .storage
+      .from('user-uploads')
+      .upload(filePath, file);
+
+    if (uploadError) {
+      uploadStatus.textContent = 'Upload failed: ' + uploadError.message;
+      uploadStatus.style.color = '#ff6b6b';
+      imagePreview.style.display = 'none';
+    } else {
+      uploadStatus.textContent = '✅ Image uploaded!';
+      uploadStatus.style.color = '#4caf50';
+      localStorage.setItem('lastUploadedImagePath', filePath);
+    }
+  });
+
+  
+  checkSession();
+
+</script>
+</body>
+</html>

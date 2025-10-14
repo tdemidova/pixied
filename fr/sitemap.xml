@@ -2,6 +2,18 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>http://localhost:1313/fr/dashboard/</loc>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="http://localhost:1313/dashboard/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="fr"
+                href="http://localhost:1313/fr/dashboard/"
+                />
+  </url><url>
     <loc>http://localhost:1313/fr/about/</loc>
     <lastmod>2025-10-01T16:51:18+03:00</lastmod>
     <xhtml:link
