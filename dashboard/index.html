@@ -3,7 +3,7 @@
 <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Dashboard — Pixied</title>
+  <title>Pixied - 3D Generation</title>
   <style>
     body {
       background-color: #0f0f0f;
@@ -24,8 +24,104 @@
       font-size: 1rem;
     }
     button:hover { background: #252525; }
+    button:disabled { opacity: 0.6; cursor: not-allowed; }
     input { width: 100%; max-width: 400px; }
     h1 { font-weight: 700; }
+    
+    .image-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+    
+    .image-card {
+      background: #1a1a1a;
+      border-radius: 12px;
+      padding: 1rem;
+      border: 1px solid #333;
+    }
+    
+    .image-card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+    
+    .image-actions {
+      margin-top: 1rem;
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    
+    .generate-btn {
+      background: #7c3aed;
+      border: 1px solid #8b5cf6;
+      flex: 1;
+    }
+    
+    .delete-btn {
+      background: #dc2626;
+      border: 1px solid #ef4444;
+    }
+    
+    .status-container {
+      margin-top: 0.8rem;
+      font-size: 0.8rem;
+      min-height: 40px;
+    }
+    
+    .status-processing { color: #f59e0b; }
+    .status-success { color: #10b981; }
+    .status-error { color: #ef4444; }
+    .status-info { color: #9ca3af; }
+    
+    .model-link {
+      display: inline-block;
+      background: #059669;
+      color: white;
+      padding: 0.4rem 0.8rem;
+      border-radius: 6px;
+      text-decoration: none;
+      margin: 0.2rem;
+      font-size: 0.8rem;
+    }
+    
+    .model-link:hover {
+      background: #047857;
+    }
+
+    .refresh-btn {
+      background: #374151;
+      border: 1px solid #4B5563;
+      margin: 10px 0;
+      padding: 8px 16px;
+      border-radius: 6px;
+      color: white;
+      cursor: pointer;
+    }
+
+    .sync-btn {
+      background: #6366f1;
+      border: 1px solid #4f46e5;
+      margin: 10px 5px;
+      padding: 8px 16px;
+      border-radius: 6px;
+      color: white;
+      cursor: pointer;
+    }
+
+    .rls-btn {
+      background: #dc2626;
+      border: 1px solid #ef4444;
+      margin: 10px 5px;
+      padding: 8px 16px;
+      border-radius: 6px;
+      color: white;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
@@ -45,246 +141,1077 @@
       <p>Signed in as: <strong id="user-email"></strong></p>
       <button id="signout-btn">Sign Out</button>
 
-    <h2>Upload an image to generate 3D</h2>
-    <input type="file" id="image-upload" accept="image/*" />
-    <p id="upload-status"></p>
-    <div id="image-preview" style="margin-top: 1rem; display: none;">
-      <img id="preview-img" src="" alt="Preview" style="max-width: 100%; max-height: 300px; border-radius: 8px;"/>
-    </div>
-
-    <h2>Your uploaded images</h2>
-    <div id="images-list" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 1rem; margin-top: 1rem;">
-      <p id="no-images">No images yet.</p>
+      <h2>Upload an image to generate 3D</h2>
+      <input type="file" id="image-upload" accept="image/*" />
+      <p id="upload-status"></p>
+      
+      <h2>Your images</h2>
+      
+      
+      <button id="sync-all-tasks-btn" class="sync-btn">🔄 Sync All Images with Tasks</button>
+      <button id="refresh-all-tasks-btn" class="refresh-btn">🔄 Refresh All Statuses</button>
+      
+      <div id="images-container" class="image-grid">
+        <p id="no-images">No images yet.</p>
+      </div>
     </div>
   </div>
+
+  <script type="text/javascript" src="/js/preview.js"></script>
 
   <script type="module">
     const SUPABASE_URL = 'https://aozghciziapiwobafkem.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFvemdoY2l6aWFwaXdvYmFma2VtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA0NDIyMjIsImV4cCI6MjA3NjAxODIyMn0.Nmav4zv0BKwaW34ZRUzCad3kpg52TnVbpdYa3fezX8E';
 
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-  import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
-  const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-  await supabase.auth.getSession();
-
-
-  
-  const authScreen = document.getElementById('auth-screen');
-  const dashboard = document.getElementById('dashboard');
-  const emailInput = document.getElementById('email-input');
-  const signinBtn = document.getElementById('signin-btn');
-  const signoutBtn = document.getElementById('signout-btn');
-  const userEmail = document.getElementById('user-email');
-  const authStatus = document.getElementById('auth-status');
-  const imageUpload = document.getElementById('image-upload');
-  const uploadStatus = document.getElementById('upload-status');
-  const imagePreview = document.getElementById('image-preview');
-  const previewImg = document.getElementById('preview-img');
-
-  
-  async function checkSession() {
-    const { data:  { session } } = await supabase.auth.getSession();
-    if (session) {
-      authScreen.classList.add('hidden');
-      dashboard.classList.remove('hidden');
-      userEmail.textContent = session.user.email;
-      loadUserImages(); 
-    } else {
-      authScreen.classList.remove('hidden');
-      dashboard.classList.add('hidden');
-    }
-  }
-
-  
-  async function loadUserImages() {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) return;
-
-    const userId = session.user.id;
-    const { data, error } = await supabase
-      .storage
-      .from('user-uploads')
-      .list(userId + '/', {
-        limit: 50,
-        offset: 0,
-      });
-
-    const imagesList = document.getElementById('images-list');
+    
+    const authScreen = document.getElementById('auth-screen');
+    const dashboard = document.getElementById('dashboard');
+    const emailInput = document.getElementById('email-input');
+    const signinBtn = document.getElementById('signin-btn');
+    const signoutBtn = document.getElementById('signout-btn');
+    const userEmail = document.getElementById('user-email');
+    const authStatus = document.getElementById('auth-status');
+    const imageUpload = document.getElementById('image-upload');
+    const uploadStatus = document.getElementById('upload-status');
+    const imagesContainer = document.getElementById('images-container');
     const noImages = document.getElementById('no-images');
+    const refreshAllBtn = document.getElementById('refresh-all-tasks-btn');
+    const syncAllBtn = document.getElementById('sync-all-tasks-btn');
+    const rlsCheckBtn = document.getElementById('rls-check-btn');
 
-    if (error || !data || data.length === 0) {
-      noImages.style.display = 'block';
-      imagesList.innerHTML = '';
-      return;
+    
+    async function checkSession() {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        authScreen.classList.add('hidden');
+        dashboard.classList.remove('hidden');
+        userEmail.textContent = session.user.email;
+        await loadUserImages();
+      } else {
+        authScreen.classList.remove('hidden');
+        dashboard.classList.add('hidden');
+      }
     }
 
-    const imageFiles = data.filter(file =>
-      file.name.match(/\.(jpeg|jpg|png|webp)$/i)
-    );
+    
+    async function loadUserImages() {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session) {
+          console.log('❌ No active session');
+          return;
+        }
 
-    if (imageFiles.length === 0) {
-      noImages.style.display = 'block';
-      imagesList.innerHTML = '';
-      return;
-    }
-
-    noImages.style.display = 'none';
-    imagesList.innerHTML = '';
-
-    for (const file of imageFiles) {
-      const filePath = `${userId}/${file.name}`;
-      
-      const { data: signedData } = await supabase
-        .storage
-        .from('user-uploads')
-        .createSignedUrl(filePath, 3600);
-
-      
-      const item = document.createElement('div');
-      item.style.position = 'relative';
-      item.style.marginBottom = '1.2rem';
-
-      
-      const img = document.createElement('img');
-      img.src = signedData?.signedUrl || '';
-      img.alt = file.name;
-      img.style.width = '100%';
-      img.style.height = '120px';
-      img.style.objectFit = 'cover';
-      img.style.borderRadius = '8px';
-      img.style.backgroundColor = '#1a1a1a';
-      img.style.cursor = 'pointer';
-
-      
-      const deleteBtn = document.createElement('button');
-      deleteBtn.textContent = '🗑️ Delete';
-      deleteBtn.title = 'Delete this image';
-      deleteBtn.style.position = 'absolute';
-      deleteBtn.style.bottom = '4px';
-      deleteBtn.style.right = '4px';
-      deleteBtn.style.padding = '4px 8px';
-      deleteBtn.style.border = 'none';
-      deleteBtn.style.borderRadius = '4px';
-      deleteBtn.style.backgroundColor = '#ff4d4d';
-      deleteBtn.style.color = 'white';
-      deleteBtn.style.fontSize = '0.75rem';
-      deleteBtn.style.cursor = 'pointer';
-      deleteBtn.style.opacity = '0';
-      deleteBtn.style.transition = 'opacity 0.2s';
-
-      
-      item.addEventListener('mouseenter', () => {
-        deleteBtn.style.opacity = '1';
-      });
-      item.addEventListener('mouseleave', () => {
-        deleteBtn.style.opacity = '0';
-      });
-
-      
-      deleteBtn.addEventListener('click', async (e) => {
-        e.stopPropagation();
-        if (!confirm('Are you sure you want to delete this image?')) return;
-
-        const { error: delError } = await supabase
+        const userId = session.user.id;
+        console.log(`👤 Loading images for user: ${userId}`);
+        
+        
+        const { data: files, error: filesError } = await supabase
           .storage
           .from('user-uploads')
-          .remove([filePath]);
+          .list(userId + '/', { limit: 50 });
 
-        if (delError) {
-          alert('Failed to delete: ' + delError.message);
-        } else {
-          
-          loadUserImages();
+        if (filesError) {
+          console.error('❌ Error loading files:', filesError);
+          noImages.style.display = 'block';
+          imagesContainer.innerHTML = '';
+          return;
         }
-      });
+
+        if (!files || files.length === 0) {
+          noImages.style.display = 'block';
+          imagesContainer.innerHTML = '';
+          return;
+        }
+
+        
+        let tasks = [];
+        try {
+          const { data: tasksData, error: tasksError } = await supabase
+            .from('generation_tasks')
+            .select('*')
+            .eq('user_id', userId)
+            .order('created_at', { ascending: false });
+
+          if (tasksError) {
+            console.error('❌ Error loading tasks:', tasksError);
+            console.log('💡 This might be due to RLS policies. Check if user has permission to read from generation_tasks table.');
+          } else {
+            tasks = tasksData || [];
+            console.log(`📋 Successfully loaded ${tasks.length} tasks from database`);
+          }
+        } catch (tasksException) {
+          console.error('💥 Exception when loading tasks:', tasksException);
+        }
+
+        console.log(`📁 Found ${files.length} files, ${tasks.length} tasks`);
+        console.log('📋 Tasks details:', tasks);
+
+        const imageFiles = files.filter(file => file.name.match(/\.(jpeg|jpg|png|webp)$/i));
+        if (imageFiles.length === 0) {
+          noImages.style.display = 'block';
+          imagesContainer.innerHTML = '';
+          return;
+        }
+
+        noImages.style.display = 'none';
+        imagesContainer.innerHTML = '';
+
+        
+        const knownTaskId = '28585726'; 
+        const knownTask = tasks.find(t => t.id === knownTaskId);
+        
+        if (knownTask) {
+          console.log('🎯 Found known task in loaded tasks:', knownTask);
+        } else {
+          console.log('❌ Known task NOT found in loaded tasks. RLS issue?');
+          
+          
+          try {
+            const { data: specificTask, error: specificError } = await supabase
+              .from('generation_tasks')
+              .select('*')
+              .eq('id', knownTaskId)
+              .single();
+
+            if (specificError) {
+              console.error('❌ Error loading specific task:', specificError);
+            } else if (specificTask) {
+              console.log('✅ Specific task loaded directly:', specificTask);
+              tasks.push(specificTask); 
+            }
+          } catch (specificEx) {
+            console.error('💥 Exception loading specific task:', specificEx);
+          }
+        }
+
+        for (const file of imageFiles) {
+          const filePath = `${userId}/${file.name}`;
+          const { data: signedData, error: signedUrlError } = await supabase
+            .storage
+            .from('user-uploads')
+            .createSignedUrl(filePath, 3600);
+
+          if (signedUrlError) {
+            console.error(`❌ Error creating signed URL for ${filePath}:`, signedUrlError);
+            continue;
+          }
+
+          const publicUrl = `${SUPABASE_URL}/storage/v1/object/public/user-uploads/${filePath}`;
+          
+          
+          const task = findTaskForImage(tasks, publicUrl, filePath);
+          
+          console.log(`🖼️ Processing file: ${file.name}`, {
+            taskFound: !!task,
+            taskStatus: task?.status,
+            taskId: task?.id,
+            inputImageUrl: task?.input_image_url,
+            publicUrl: publicUrl
+          });
+
+          
+          if (!task && file.name === '1760524430027-photo_2025-10-08_13-29-47.jpg') {
+            console.log('🔍 MANUAL CHECK: This is the file that should have task 28585726');
+            console.log('Public URL:', publicUrl);
+            
+            
+            try {
+              const { data: directTask, error: directError } = await supabase
+                .from('generation_tasks')
+                .select('*')
+                .eq('id', '28585726')
+                .single();
+
+              if (directError) {
+                console.error('❌ Direct task query error:', directError);
+              } else if (directTask) {
+                console.log('✅ Direct task query result:', directTask);
+                console.log('Task input URL:', directTask.input_image_url);
+                console.log('Current public URL:', publicUrl);
+                console.log('URLs match:', directTask.input_image_url === publicUrl);
+              }
+            } catch (directEx) {
+              console.error('💥 Exception in direct task query:', directEx);
+            }
+          }
+          
+          const card = document.createElement('div');
+          card.className = 'image-card';
+          card.dataset.filename = file.name;
+          card.dataset.filePath = filePath;
+          if (task) {
+            card.dataset.taskId = task.id;
+            card.dataset.taskStatus = task.status;
+          }
+          
+          
+          const img = document.createElement('img');
+          img.src = signedData?.signedUrl || '';
+          img.alt = file.name;
+          img.loading = 'lazy';
+          img.onerror = () => {
+            console.error(`❌ Failed to load image: ${file.name}`);
+            img.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMzMzIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IiM2NjYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIwLjM1ZW0iPkltYWdlIE5vdCBGb3VuZDwvdGV4dD48L3N2Zz4=';
+          };
+          
+          
+          const actions = document.createElement('div');
+          actions.className = 'image-actions';
+          
+          
+          const generateBtn = document.createElement('button');
+          generateBtn.className = 'generate-btn';
+          generateBtn.textContent = '✨ Generate 3D';
+          generateBtn.title = 'Generate 3D model from this image';
+          
+          
+          const deleteBtn = document.createElement('button');
+          deleteBtn.className = 'delete-btn';
+          deleteBtn.textContent = '🗑️';
+          deleteBtn.title = 'Delete this image';
+          
+          
+          const statusContainer = document.createElement('div');
+          statusContainer.className = 'status-container';
+          
+          
+          generateBtn.addEventListener('click', () => handleGeneration(filePath, publicUrl, card));
+          deleteBtn.addEventListener('click', () => handleDelete(filePath, publicUrl));
+          
+          actions.appendChild(generateBtn);
+          actions.appendChild(deleteBtn);
+          
+          card.appendChild(img);
+          card.appendChild(actions);
+          card.appendChild(statusContainer);
+          
+          imagesContainer.appendChild(card);
+          
+          
+          if (task) {
+            updateCardStatus(card, task);
+          } else {
+            
+            console.log(`📭 No task found for image: ${file.name}`);
+            statusContainer.innerHTML = `
+              <div class="status-info">
+                No results yet
+                <div style="font-size: 0.7rem; margin-top: 0.3rem; color: #666;">
+                  Click Generate to start
+                </div>
+              </div>
+            `;
+            generateBtn.disabled = false;
+          }
+        }
+
+        console.log(`✅ Successfully loaded ${imageFiles.length} images`);
+        
+      } catch (error) {
+        console.error('💥 Unexpected error in loadUserImages:', error);
+        noImages.style.display = 'block';
+        noImages.textContent = 'Error loading images. Please refresh the page.';
+        imagesContainer.innerHTML = '';
+      }
+    }
+
+    
+    function findTaskForImage(tasks, publicUrl, filePath) {
+      if (!tasks || tasks.length === 0) return null;
 
       
-      item.addEventListener('click', () => {
-        localStorage.setItem('selectedImage', filePath);
-        alert('Selected: ' + file.name);
+      const normalizeUrl = (url) => {
+        if (!url) return '';
+        return decodeURIComponent(url.replace(/\/+$/, '').trim());
+      };
+
+      const normalizedPublicUrl = normalizeUrl(publicUrl);
+      
+      console.log(`🔍 Looking for task matching: ${normalizedPublicUrl}`);
+
+      
+      for (const task of tasks) {
+        const taskUrl = normalizeUrl(task.input_image_url);
+        
+        
+        if (taskUrl === normalizedPublicUrl) {
+          console.log(`✅ Exact match found for task ${task.id}`);
+          return task;
+        }
+        
+        
+        if (decodeURIComponent(taskUrl) === decodeURIComponent(normalizedPublicUrl)) {
+          console.log(`✅ Decoded match found for task ${task.id}`);
+          return task;
+        }
+        
+        
+        const taskFileName = taskUrl.split('/').pop();
+        const currentFileName = normalizedPublicUrl.split('/').pop();
+        if (taskFileName === currentFileName) {
+          console.log(`✅ Filename match found for task ${task.id}`);
+          return task;
+        }
+        
+        
+        const taskPath = taskUrl.split('/user-uploads/')[1];
+        if (taskPath === filePath) {
+          console.log(`✅ Storage path match found for task ${task.id}`);
+          return task;
+        }
+      }
+      
+      console.log('❌ No matching task found using any strategy');
+      return null;
+    }
+
+    
+    function updateCardStatus(card, task) {
+      const statusContainer = card.querySelector('.status-container');
+      const generateBtn = card.querySelector('.generate-btn');
+
+      if (!statusContainer || !generateBtn) return;
+
+      console.log(`🔄 Updating card status for task ${task.id}: ${task.status}`, {
+        output_file_path: task.output_file_path,
+        model_url: task.model_url,
+        output: task.output
       });
 
-      item.appendChild(img);
-      item.appendChild(deleteBtn);
-      imagesList.appendChild(item);
-    }
-  }
-  
-  signinBtn?.addEventListener('click', async () => {
-    const email = emailInput.value.trim();
-    if (!email || !email.includes('@')) {
-      authStatus.textContent = 'Please enter a valid email.';
-      authStatus.style.color = '#ff6b6b';
-      return;
+      switch (task.status) {
+        case 'processing':
+        case 'starting':
+          generateBtn.disabled = true;
+          generateBtn.textContent = '⏳ Processing...';
+          statusContainer.innerHTML = `
+            <div class="status-processing">
+              ⏳ Processing 3D model...
+              <div style="font-size: 0.7rem; margin-top: 0.3rem; color: #f59e0b;">
+                ID: ${task.id}
+              </div>
+            </div>
+          `;
+          
+          setTimeout(() => checkTaskStatus(task.id, card, 1, 30), 1000);
+          break;
+
+        case 'success':
+          
+          const modelUrl = task.output_file_path || task.model_url || task.output;
+          
+          if (modelUrl && modelUrl.startsWith('http')) {
+            updateSuccessStatus(statusContainer, modelUrl);
+          } else {
+            statusContainer.innerHTML = `
+              <div class="status-success">
+                ✅ Generation completed
+                <div style="font-size: 0.7rem; margin-top: 0.3rem; color: #ccc;">
+                  ${modelUrl ? `Output: ${modelUrl}` : 'No output data'}
+                </div>
+                <div style="font-size: 0.7rem; margin-top: 0.3rem; color: #ccc;">
+                  ID: ${task.id}
+                </div>
+              </div>
+            `;
+          }
+          generateBtn.disabled = false;
+          generateBtn.textContent = '🔄 Regenerate';
+          break;
+
+        case 'failed':
+        case 'error':
+          statusContainer.innerHTML = `
+            <div class="status-error">
+              ❌ Generation failed
+              <div style="font-size: 0.7rem; margin-top: 0.3rem; color: #fca5a5;">
+                ${task.output || 'Unknown error'}
+              </div>
+              <div style="font-size: 0.7rem; margin-top: 0.3rem; color: #ccc;">
+                ID: ${task.id}
+              </div>
+            </div>
+          `;
+          generateBtn.disabled = false;
+          generateBtn.textContent = '🔄 Try Again';
+          break;
+
+        default:
+          statusContainer.innerHTML = `
+            <div class="status-info">
+              ❓ Status: ${task.status}
+              <div style="font-size: 0.7rem; margin-top: 0.3rem; color: #ccc;">
+                ID: ${task.id}
+              </div>
+            </div>
+          `;
+          generateBtn.disabled = false;
+      }
     }
 
-    authStatus.textContent = 'Sending magic link...';
-    authStatus.style.color = '#4caf50';
+    
+    async function checkTaskStatus(requestId, card, attempt = 1, maxAttempts = 30) {
+      try {
+        console.log(`🔄 Checking task status: ${requestId}, attempt ${attempt}/${maxAttempts}`);
+        
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session) {
+          console.log('❌ No session found');
+          return;
+        }
 
-    const redirectUrl = window.location.origin + '/dashboard/';
-    const { error } = await supabase.auth.signInWithOtp({
-      email,
-      options: { emailRedirectTo: redirectUrl }
+        const statusRes = await fetch(
+          `${SUPABASE_URL}/functions/v1/get-task-status/${requestId}`,
+          {
+            headers: { 'Authorization': `Bearer ${session.access_token}` }
+          }
+        );
+
+        console.log(`📊 Status response:`, statusRes.status, statusRes.statusText);
+
+        if (!statusRes.ok) {
+          const errorText = await statusRes.text();
+          console.error(`❌ Status check failed:`, errorText);
+          throw new Error(`HTTP ${statusRes.status}: ${statusRes.statusText}`);
+        }
+
+        const statusData = await statusRes.json();
+        console.log(`🎯 Status data:`, statusData);
+        
+        const statusContainer = card.querySelector('.status-container');
+        const generateBtn = card.querySelector('.generate-btn');
+
+        if (!statusContainer) {
+          console.error('❌ Status container not found in card');
+          return;
+        }
+
+        
+        switch (statusData.status) {
+          case 'success':
+            console.log(`✅ Task ${requestId} completed successfully`);
+            
+            
+            try {
+              const updateData = {
+                status: 'success',
+                updated_at: new Date().toISOString()
+              };
+
+              
+              if (statusData.model_url || statusData.output_file_path) {
+                const modelUrl = statusData.model_url || statusData.output_file_path;
+                updateData.output = modelUrl;
+                updateData.model_url = modelUrl;
+                updateData.output_file_path = modelUrl;
+                
+                console.log(`💾 Saving model URL to database: ${modelUrl}`);
+              } else {
+                updateData.output = statusData.output || statusData.result;
+                console.log('💾 Saving output data to database (no model URL)');
+              }
+
+              const { error: updateError } = await supabase
+                .from('generation_tasks')
+                .update(updateData)
+                .eq('id', requestId);
+
+              if (updateError) {
+                console.error('❌ Database update error:', updateError);
+              } else {
+                console.log('✅ Successfully updated task in database');
+              }
+            } catch (dbError) {
+              console.error('💥 Database error:', dbError);
+            }
+
+            
+            if (statusData.model_url || statusData.output_file_path) {
+              const modelUrl = statusData.model_url || statusData.output_file_path;
+              updateSuccessStatus(statusContainer, modelUrl);
+            } else {
+              statusContainer.innerHTML = `
+                <div class="status-success">
+                  ✅ Generation completed
+                  <div style="font-size: 0.7rem; margin-top: 0.3rem; color: #ccc;">
+                    No model URL provided
+                  </div>
+                  <div style="font-size: 0.7rem; margin-top: 0.3rem; color: #ccc;">
+                    Output: ${statusData.output || statusData.result}
+                  </div>
+                </div>
+              `;
+            }
+            if (generateBtn) {
+              generateBtn.disabled = false;
+              generateBtn.textContent = '🔄 Regenerate';
+            }
+            break;
+
+          case 'processing':
+          case 'starting':
+            console.log(`⏳ Task ${requestId} still processing`);
+            if (attempt >= maxAttempts) {
+              statusContainer.innerHTML = `
+                <div class="status-error">
+                  ⏰ Timeout: Generation taking too long
+                  <div style="font-size: 0.7rem; margin-top: 0.3rem; color: #fca5a5;">
+                    Request ID: ${requestId}
+                  </div>
+                </div>
+              `;
+              if (generateBtn) generateBtn.disabled = false;
+            } else {
+              statusContainer.innerHTML = `
+                <div class="status-processing">
+                  ⏳ Processing... (${attempt}/${maxAttempts})
+                  <div style="font-size: 0.7rem; margin-top: 0.3rem; color: #f59e0b;">
+                    Request ID: ${requestId}
+                  </div>
+                </div>
+              `;
+              
+              try {
+                await supabase
+                  .from('generation_tasks')
+                  .update({
+                    status: statusData.status,
+                    updated_at: new Date().toISOString()
+                  })
+                  .eq('id', requestId);
+              } catch (dbError) {
+                console.error('Database update error:', dbError);
+              }
+              
+              
+              setTimeout(() => checkTaskStatus(requestId, card, attempt + 1, maxAttempts), 5000);
+            }
+            break;
+
+          case 'failed':
+          case 'error':
+            console.error(`❌ Task ${requestId} failed:`, statusData.result || statusData.output);
+            
+            
+            try {
+              await supabase
+                .from('generation_tasks')
+                .update({
+                  status: 'failed',
+                  output: statusData.output || statusData.result || 'Unknown error',
+                  updated_at: new Date().toISOString()
+                })
+                .eq('id', requestId);
+            } catch (dbError) {
+              console.error('Database update error:', dbError);
+            }
+            
+            statusContainer.innerHTML = `
+              <div class="status-error">
+                ❌ Generation failed
+                <div style="font-size: 0.7rem; margin-top: 0.3rem; color: #fca5a5;">
+                  ${statusData.output || statusData.result || 'Unknown error'}
+                </div>
+                <div style="font-size: 0.7rem; margin-top: 0.3rem; color: #ccc;">
+                  Request ID: ${requestId}
+                </div>
+              </div>
+            `;
+            if (generateBtn) {
+              generateBtn.disabled = false;
+              generateBtn.textContent = '🔄 Try Again';
+            }
+            break;
+
+          default:
+            console.warn(`❓ Unknown status for task ${requestId}:`, statusData.status);
+            statusContainer.innerHTML = `
+              <div class="status-info">
+                ❓ Unknown status: ${statusData.status}
+                <div style="font-size: 0.7rem; margin-top: 0.3rem; color: #ccc;">
+                  Request ID: ${requestId}
+                </div>
+              </div>
+            `;
+            if (generateBtn) generateBtn.disabled = false;
+        }
+
+      } catch (error) {
+        console.error(`💥 Error checking task ${requestId}:`, error);
+        const statusContainer = card.querySelector('.status-container');
+        const generateBtn = card.querySelector('.generate-btn');
+        
+        if (statusContainer) {
+          statusContainer.innerHTML = `
+            <div class="status-error">
+              ❌ Error checking status
+              <div style="font-size: 0.7rem; margin-top: 0.3rem; color: #fca5a5;">
+                ${error.message}
+              </div>
+              <div style="font-size: 0.7rem; margin-top: 0.3rem; color: #ccc;">
+                Request ID: ${requestId}
+              </div>
+            </div>
+          `;
+        }
+        
+        if (generateBtn) generateBtn.disabled = false;
+      }
+    }
+
+    
+    function updateSuccessStatus(statusContainer, modelUrl) {
+      if (modelUrl && modelUrl.startsWith('http')) {
+        
+        const fileExtension = modelUrl.split('.').pop().toLowerCase();
+        const is3DFormat = ['glb', 'gltf', 'obj', 'stl', 'fbx'].includes(fileExtension);
+        
+        statusContainer.innerHTML = `
+          <div class="status-success">
+            ✅ 3D Model Ready!
+            <div style="margin-top: 0.5rem;">
+              <a href="${modelUrl}" class="model-link" target="_blank" download="model.${fileExtension}">
+                📥 Download ${is3DFormat ? fileExtension.toUpperCase() : 'File'}
+              </a>
+              <button onclick="preview3DModel('${modelUrl}')" class="model-link" style="background: #7c3aed; border: none; cursor: pointer;">
+                👀 Preview
+              </button>
+            </div>
+            <div style="font-size: 0.7rem; margin-top: 0.5rem; color: #ccc;">
+              <a href="${modelUrl}" target="_blank" style="color: #ccc; text-decoration: underline;">
+                Direct link
+              </a>
+            </div>
+          </div>
+        `;
+      } else {
+        statusContainer.innerHTML = `
+          <div class="status-success">
+            ✅ Generation completed
+            <div style="font-size: 0.7rem; margin-top: 0.3rem; color: #ccc;">
+              Output: ${modelUrl || 'No URL provided'}
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    
+    function handleModelNotFoundError(statusContainer, modelUrl, taskId) {
+      console.error(`❌ Model not found at: ${modelUrl}`);
+      
+      statusContainer.innerHTML = `
+        <div class="status-error">
+          ❌ 3D Model File Not Found
+          <div style="font-size: 0.7rem; margin-top: 0.3rem; color: #fca5a5;">
+            The generated 3D model file could not be found at the expected location.
+          </div>
+          <div style="font-size: 0.7rem; margin-top: 0.3rem; color: #ccc;">
+            Expected URL: ${modelUrl}
+          </div>
+          <div style="font-size: 0.7rem; margin-top: 0.3rem; color: #ccc;">
+            Task ID: ${taskId}
+          </div>
+          <div style="margin-top: 0.5rem;">
+            <button onclick="retryGeneration('${taskId}')" class="model-link" style="background: #dc2626; border: none; cursor: pointer;">
+              🔄 Retry Generation
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    
+    async function handleGeneration(filePath, publicUrl, card) {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        alert('Not authenticated');
+        return;
+      }
+
+      const statusContainer = card.querySelector('.status-container');
+      const generateBtn = card.querySelector('.generate-btn');
+      
+      if (!statusContainer || !generateBtn) {
+        console.error('Required DOM elements not found');
+        return;
+      }
+
+      statusContainer.innerHTML = '<div class="status-processing">🚀 Starting 3D generation...</div>';
+      generateBtn.disabled = true;
+
+      try {
+        console.log(`🚀 Sending generation request for: ${publicUrl}`);
+        
+        const response = await fetch(`${SUPABASE_URL}/functions/v1/start-generation`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${session.access_token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ image_url: publicUrl })
+        });
+
+        const result = await response.json();
+        console.log('📦 Generation response:', result);
+        
+        if (!response.ok) {
+          throw new Error(result.error || `HTTP ${response.status}: Generation failed`);
+        }
+
+        console.log(`🎯 Generation started with request ID: ${result.request_id}`);
+        
+        statusContainer.innerHTML = `
+          <div class="status-processing">
+            ⏳ Processing 3D model...
+            <div style="font-size: 0.7rem; margin-top: 0.3rem; color: #f59e0b;">
+              Request ID: ${result.request_id}
+            </div>
+          </div>
+        `;
+        
+        
+        setTimeout(async () => {
+          const { data: task } = await supabase
+            .from('generation_tasks')
+            .select('*')
+            .eq('id', result.request_id)
+            .single();
+          
+          console.log('💾 Task saved in database:', task);
+        }, 1000);
+        
+        
+        setTimeout(() => checkTaskStatus(result.request_id, card, 1, 30), 3000);
+
+      } catch (err) {
+        console.error('❌ Generation error:', err);
+        statusContainer.innerHTML = `
+          <div class="status-error">
+            ❌ Error: ${err.message}
+            <div style="font-size: 0.7rem; margin-top: 0.3rem; color: #fca5a5;">
+              Please try again
+            </div>
+          </div>
+        `;
+        generateBtn.disabled = false;
+      }
+    }
+
+    
+    async function handleDelete(filePath, publicUrl) {
+      if (!confirm('Are you sure you want to delete this image and all associated generation data?')) return;
+      
+      try {
+        const { error: storageError } = await supabase.storage.from('user-uploads').remove([filePath]);
+        
+        if (storageError) {
+          throw new Error(`Storage error: ${storageError.message}`);
+        }
+        
+        
+        const { error: taskError } = await supabase
+          .from('generation_tasks')
+          .delete()
+          .eq('input_image_url', publicUrl);
+        
+        if (taskError) {
+          console.error('Error deleting task:', taskError);
+        }
+        
+        console.log(`✅ Successfully deleted: ${filePath}`);
+        loadUserImages(); 
+        
+      } catch (error) {
+        console.error('❌ Error deleting file:', error);
+        alert(`Error deleting image: ${error.message}`);
+      }
+    }
+
+    
+    async function refreshAllTasksStatus() {
+      console.log('🔄 Manually refreshing all task statuses');
+      const cards = document.querySelectorAll('.image-card');
+      
+      for (const card of cards) {
+        const taskId = card.dataset.taskId;
+        const currentStatus = card.dataset.taskStatus;
+        
+        if (taskId && (currentStatus === 'processing' || currentStatus === 'starting')) {
+          const generateBtn = card.querySelector('.generate-btn');
+          const statusContainer = card.querySelector('.status-container');
+          
+          if (generateBtn && statusContainer) {
+            generateBtn.disabled = true;
+            statusContainer.innerHTML = '<div class="status-processing">🔄 Refreshing status...</div>';
+            setTimeout(() => checkTaskStatus(taskId, card, 1, 5), 500);
+          }
+        }
+      }
+    }
+
+    
+    async function syncAllImagesWithTasks() {
+      console.log('🔄 Starting sync of all images with tasks');
+      
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) return;
+
+      const userId = session.user.id;
+      
+      
+      const { data: allTasks, error: tasksError } = await supabase
+        .from('generation_tasks')
+        .select('*')
+        .eq('user_id', userId);
+
+      if (tasksError) {
+        console.error('❌ Error loading tasks:', tasksError);
+        return;
+      }
+
+      console.log(`📋 Found ${allTasks?.length || 0} total tasks for user`);
+
+      
+      const cards = document.querySelectorAll('.image-card');
+      cards.forEach(card => {
+        const filePath = card.dataset.filePath;
+        if (!filePath) return;
+
+        const publicUrl = `${SUPABASE_URL}/storage/v1/object/public/user-uploads/${filePath}`;
+        const statusContainer = card.querySelector('.status-container');
+        const generateBtn = card.querySelector('.generate-btn');
+
+        if (!statusContainer || !generateBtn) return;
+
+        
+        const task = allTasks?.find(t => {
+          const normalizeUrl = (url) => url?.replace(/\/+$/, '').trim() || '';
+          return normalizeUrl(t.input_image_url) === normalizeUrl(publicUrl);
+        });
+
+        if (task) {
+          console.log(`✅ Found task for ${filePath}:`, task.id, task.status);
+          card.dataset.taskId = task.id;
+          card.dataset.taskStatus = task.status;
+
+          
+          if (task.status === 'processing' || task.status === 'starting') {
+            generateBtn.disabled = true;
+            statusContainer.innerHTML = '<div class="status-processing">⏳ Checking status...</div>';
+            setTimeout(() => checkTaskStatus(task.id, card, 1, 30), 1000);
+          } else if (task.status === 'success' && task.output) {
+            updateSuccessStatus(statusContainer, task.output);
+            generateBtn.disabled = false;
+            generateBtn.textContent = '🔄 Regenerate';
+          } else if (task.status === 'failed' || task.status === 'error') {
+            statusContainer.innerHTML = `<div class="status-error">❌ Generation failed</div>`;
+            generateBtn.disabled = false;
+            generateBtn.textContent = '🔄 Try Again';
+          }
+        } else {
+          console.log(`❌ No task found for ${filePath}`);
+        }
+      });
+    }
+
+    
+    async function checkRLSAccess() {
+      console.log('🔐 Checking RLS access to generation_tasks table...');
+      
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        console.log('❌ No session for RLS check');
+        return;
+      }
+
+      const userId = session.user.id;
+      
+      
+      console.log('🧪 Test 1: Loading all tasks for user');
+      const { data: allTasks, error: allError } = await supabase
+        .from('generation_tasks')
+        .select('*')
+        .eq('user_id', userId);
+
+      if (allError) {
+        console.error('❌ Test 1 FAILED - RLS issue?', allError);
+      } else {
+        console.log(`✅ Test 1 PASSED - Found ${allTasks?.length || 0} tasks`);
+      }
+
+      
+      console.log('🧪 Test 2: Loading specific task by ID');
+      const { data: specificTask, error: specificError } = await supabase
+        .from('generation_tasks')
+        .select('*')
+        .eq('id', '28585726')
+        .single();
+
+      if (specificError) {
+        console.error('❌ Test 2 FAILED - RLS issue?', specificError);
+      } else {
+        console.log('✅ Test 2 PASSED - Specific task loaded:', specificTask);
+      }
+
+      
+      console.log('🧪 Test 3: Testing INSERT permission');
+      const testTaskId = 'test-' + Date.now();
+      const { error: insertError } = await supabase
+        .from('generation_tasks')
+        .insert({
+          id: testTaskId,
+          user_id: userId,
+          input_image_url: 'https://example.com/test.jpg',
+          status: 'testing'
+        });
+
+      if (insertError) {
+        console.error('❌ Test 3 FAILED - INSERT RLS issue?', insertError);
+      } else {
+        console.log('✅ Test 3 PASSED - INSERT permission granted');
+        
+        
+        await supabase
+          .from('generation_tasks')
+          .delete()
+          .eq('id', testTaskId);
+      }
+    }
+
+    
+    async function forceLoadKnownTasks() {
+      console.log('🔧 Force loading known tasks...');
+      
+      const knownTaskIds = ['28585726']; 
+      
+      for (const taskId of knownTaskIds) {
+        try {
+          const { data: task, error } = await supabase
+            .from('generation_tasks')
+            .select('*')
+            .eq('id', taskId)
+            .single();
+
+          if (error) {
+            console.error(`❌ Failed to load task ${taskId}:`, error);
+          } else if (task) {
+            console.log(`✅ Loaded known task ${taskId}:`, task);
+            
+            
+            const cards = document.querySelectorAll('.image-card');
+            for (const card of cards) {
+              const filePath = card.dataset.filePath;
+              if (!filePath) continue;
+
+              const publicUrl = `${SUPABASE_URL}/storage/v1/object/public/user-uploads/${filePath}`;
+              
+              
+              if (task.input_image_url === publicUrl) {
+                console.log(`🎯 Found matching card for task ${taskId}`);
+                card.dataset.taskId = task.id;
+                card.dataset.taskStatus = task.status;
+                updateCardStatus(card, task);
+                break;
+              }
+            }
+          }
+        } catch (ex) {
+          console.error(`💥 Exception loading task ${taskId}:`, ex);
+        }
+      }
+    }
+
+    
+    
+
+
+    
+    window.retryGeneration = async function(taskId) {
+      console.log(`🔄 Retrying generation for task: ${taskId}`);
+      
+      
+      const card = document.querySelector(`[data-task-id="${taskId}"]`);
+      if (!card) {
+        alert('Card not found for this task');
+        return;
+      }
+      
+      const filePath = card.dataset.filePath;
+      const publicUrl = `${SUPABASE_URL}/storage/v1/object/public/user-uploads/${filePath}`;
+      
+      
+      await handleGeneration(filePath, publicUrl, card);
+    };
+
+    
+    signinBtn?.addEventListener('click', async () => {
+      const email = emailInput.value.trim();
+      if (!email || !email.includes('@')) {
+        authStatus.textContent = 'Please enter a valid email.';
+        authStatus.style.color = '#ff6b6b';
+        return;
+      }
+      authStatus.textContent = 'Sending magic link...';
+      const redirectUrl = window.location.origin + '/dashboard/';
+      const { error } = await supabase.auth.signInWithOtp({ email, options: { emailRedirectTo: redirectUrl } });
+      authStatus.textContent = error ? `Error: ${error.message}` : '✅ Check your email!';
+      authStatus.style.color = error ? '#ff6b6b' : '#4caf50';
     });
 
-    if (error) {
-      authStatus.textContent = 'Error: ' + error.message;
-      authStatus.style.color = '#ff6b6b';
-    } else {
-      authStatus.textContent = '✅ Check your email for the magic link!';
-    }
-  });
+    signoutBtn?.addEventListener('click', async () => {
+      await supabase.auth.signOut();
+      checkSession();
+    });
 
-  
-  signoutBtn?.addEventListener('click', async () => {
-    await supabase.auth.signOut();
-    checkSession();
-  });
+    
+    imageUpload?.addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
 
-  
-  imageUpload?.addEventListener('change', async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    const objectUrl = URL.createObjectURL(file);
-    previewImg.src = objectUrl;
-    imagePreview.style.display = 'block';
-
-    uploadStatus.textContent = 'Uploading...';
-    uploadStatus.style.color = '#4caf50';
-
-    const { data: { session }, error: authError } = await supabase.auth.getSession();
-    if (authError || !session) {
-      uploadStatus.textContent = 'Authentication required.';
-      uploadStatus.style.color = '#ff6b6b';
-      imagePreview.style.display = 'none';
-      return;
-    }
-
-    const userId = session.user.id;
-    const fileName = `${Date.now()}-${file.name.replace(/\s+/g, '-')}`;
-    const filePath = `${userId}/${fileName}`;
-
-    const { error: uploadError } = await supabase
-      .storage
-      .from('user-uploads')
-      .upload(filePath, file);
-
-    if (uploadError) {
-      uploadStatus.textContent = 'Upload failed: ' + uploadError.message;
-      uploadStatus.style.color = '#ff6b6b';
-      imagePreview.style.display = 'none';
-    } else {
-      uploadStatus.textContent = '✅ Image uploaded!';
+      uploadStatus.textContent = 'Uploading...';
       uploadStatus.style.color = '#4caf50';
-      localStorage.setItem('lastUploadedImagePath', filePath);
-    }
-  });
 
-  
-  checkSession();
+      const { data: { session }, error: authError } = await supabase.auth.getSession();
+      if (authError || !session) {
+        uploadStatus.textContent = 'Authentication required.';
+        uploadStatus.style.color = '#ff6b6b';
+        return;
+      }
 
-</script>
+      const userId = session.user.id;
+      const fileName = `${Date.now()}-${file.name.replace(/\s+/g, '-')}`;
+      const filePath = `${userId}/${fileName}`;
+
+      const { error: uploadError } = await supabase
+        .storage
+        .from('user-uploads')
+        .upload(filePath, file);
+
+      if (uploadError) {
+        uploadStatus.textContent = 'Upload failed: ' + uploadError.message;
+        uploadStatus.style.color = '#ff6b6b';
+      } else {
+        uploadStatus.textContent = '✅ Image uploaded!';
+        uploadStatus.style.color = '#4caf50';
+        loadUserImages(); 
+      }
+      
+      
+      e.target.value = '';
+    });
+
+    
+    refreshAllBtn?.addEventListener('click', refreshAllTasksStatus);
+    syncAllBtn?.addEventListener('click', syncAllImagesWithTasks);
+    rlsCheckBtn?.addEventListener('click', checkRLSAccess);
+
+    
+    checkSession();
+  </script>
+
 </body>
 </html>
