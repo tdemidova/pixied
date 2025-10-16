@@ -100,3 +100,26 @@ async function updateAuthUI() {
 // Запускаем при загрузке и при изменении состояния
 document.addEventListener('DOMContentLoaded', updateAuthUI);
 supabase.auth.onAuthStateChange(() => updateAuthUI());
+
+
+  document.querySelectorAll('.faq-question').forEach(button => {
+    button.addEventListener('click', () => {
+      const answer = button.nextElementSibling;
+      const isExpanded = button.getAttribute('aria-expanded') === 'true';
+
+      // Закрываем все остальные
+      document.querySelectorAll('.faq-question').forEach(btn => {
+        btn.setAttribute('aria-expanded', 'false');
+        btn.nextElementSibling.setAttribute('hidden', '');
+      });
+
+      // Переключаем текущий
+      if (!isExpanded) {
+        button.setAttribute('aria-expanded', 'true');
+        answer.removeAttribute('hidden');
+      } else {
+        button.setAttribute('aria-expanded', 'false');
+        answer.setAttribute('hidden', '');
+      }
+    });
+  });
